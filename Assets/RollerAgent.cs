@@ -8,8 +8,8 @@ using Unity.MLAgents.Policies;
 // RollerAgent
 public class RollerAgent : Agent
 {
-    public Transform target; // TargetのTransform
     Rigidbody rBody; // RollerAgentのRigidBody
+    public Target target_obj;
 
     // 初期化時に呼ばれる
     public override void Initialize()
@@ -30,16 +30,16 @@ public class RollerAgent : Agent
             this.transform.localPosition = new Vector3(0.0f, 0.5f, 0.0f);
         }
 
-        // Targetの位置のリセット
-        target.localPosition = new Vector3(
-            Random.value*8-4, 0.5f, Random.value*8-4);
+        // Targetの位置・角速度のリセット
+        target_obj.setRandomPosition();
+        target_obj.setRandomOmega();
     }
 
     // 状態取得時に呼ばれる
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(target.localPosition.x); //TargetのX座標
-        sensor.AddObservation(target.localPosition.z); //TargetのZ座標
+        sensor.AddObservation(target_obj.transform.position.x); //TargetのX座標
+        sensor.AddObservation(target_obj.transform.position.z); //TargetのZ座標
         sensor.AddObservation(this.transform.localPosition.x); //RollerAgentのX座標
         sensor.AddObservation(this.transform.localPosition.z); //RollerAgentのZ座標
         sensor.AddObservation(rBody.velocity.x); // RollerAgentのX速度
@@ -57,7 +57,7 @@ public class RollerAgent : Agent
 
         // RollerAgentがTargetの位置にたどりついた時
         float distanceToTarget = Vector3.Distance(
-            this.transform.localPosition, target.localPosition);
+            this.transform.localPosition, target_obj.transform.position);
         if (distanceToTarget < 1.42f)
         {
             AddReward(1.0f);
@@ -67,8 +67,10 @@ public class RollerAgent : Agent
         // RollerAgentが床から落下した時
         if (this.transform.localPosition.y < 0)
         {
+            AddReward(-1.0f);
             EndEpisode();
         }
+        AddReward(-0.01f);
     }
 
     // ヒューリスティックモードの行動決定時に呼ばれる
