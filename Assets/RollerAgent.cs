@@ -67,7 +67,7 @@ public class RollerAgent : Agent
         // RollerAgentが床から落下した時
         if (this.transform.localPosition.y < 0)
         {
-            AddReward(-1.0f);
+            AddReward(-5.0f);
             EndEpisode();
         }
         AddReward(-0.01f);

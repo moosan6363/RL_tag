@@ -313,6 +313,7 @@ GameObject:
   - component: {fileID: 1218406058}
   - component: {fileID: 1218406057}
   - component: {fileID: 1218406056}
+  - component: {fileID: 1218406059}
   m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
@@ -398,6 +399,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1218406054}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1218406059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218406054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d6e3123d348349e6b4cb2f5daf709c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  omega: 90
 --- !u!1 &1693602123
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,7 +465,7 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 1000
-  target: {fileID: 1218406055}
+  target_obj: {fileID: 1218406059}
 --- !u!114 &1693602126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,7 +488,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 6754907d88337704bbe1dd292e400e33, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: f4e6ae741c2f04c8ebccb87119fa8c1e, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: RollerBall

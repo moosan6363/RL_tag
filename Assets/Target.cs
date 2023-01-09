@@ -9,7 +9,6 @@ public class Target : MonoBehaviour
     // Start is called before the first frame update
     // void Start()
     // {
-        
     // }
 
     // Update is called once per frame
@@ -32,7 +31,7 @@ public class Target : MonoBehaviour
     }
 
     public void setRandomOmega() {
-        this.omega = Random.value * 360;
+        this.omega = (Random.value - (float)0.5) * 720;
     }
 
     public void setRandomPosition() {
