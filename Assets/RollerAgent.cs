@@ -31,10 +31,10 @@ public class RollerAgent : Agent
     // 状態取得時に呼ばれる
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(target_obj.transform.position.x); //TargetのX座標
-        sensor.AddObservation(target_obj.transform.position.z); //TargetのZ座標
-        sensor.AddObservation(this.transform.position.x); //RollerAgentのX座標
-        sensor.AddObservation(this.transform.position.z); //RollerAgentのZ座標
+        sensor.AddObservation(target_obj.transform.localPosition.x); //TargetのX座標
+        sensor.AddObservation(target_obj.transform.localPosition.z); //TargetのZ座標
+        sensor.AddObservation(this.transform.localPosition.x); //RollerAgentのX座標
+        sensor.AddObservation(this.transform.localPosition.z); //RollerAgentのZ座標
         sensor.AddObservation(rBody.velocity.x); // RollerAgentのX速度
         sensor.AddObservation(rBody.velocity.z); // RollerAgentのZ速度
     }
@@ -48,21 +48,11 @@ public class RollerAgent : Agent
         controlSignal.z = actionBuffers.ContinuousActions[1];
         rBody.AddForce(controlSignal * 10);
 
-        float distanceToTarget = Vector3.Distance(this.transform.localPosition, target_obj.transform.position);
-
-        // RollerAgentがTargetの位置にたどりついた時
-        if (distanceToTarget < 1.42f)
-        {
-            AddReward(1.0f);
-            target_obj.AddReward(-1.0f);
-            target_obj.EndEpisode();
-            EndEpisode();
-        }
-
+        float distanceToTarget = Vector3.Distance(this.transform.localPosition, target_obj.transform.localPosition);
         // SubReward
         if (distanceToTarget >= old_distanceToTarget) {
-            AddReward(-0.01f);
-            target_obj.AddReward(0.01f);
+            AddReward(-0.005f);
+            target_obj.AddReward(0.005f);
         }
 
         old_distanceToTarget = distanceToTarget;
@@ -74,5 +64,18 @@ public class RollerAgent : Agent
         var continuousActionsOut = actionsOut.ContinuousActions;
         continuousActionsOut[0] = Input.GetAxis("Horizontal");
         continuousActionsOut[1] = Input.GetAxis("Vertical");
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        // ターゲットに接触したら終了
+        if (collision.gameObject.name == "TargetAgent") {
+            AddReward(1.0f);
+            EndEpisode();
+        }
+        // 壁に激突したら罰を与える
+        else if (collision.gameObject.CompareTag("Wall")) {
+            AddReward(-0.1f);
+        }
     }
 }

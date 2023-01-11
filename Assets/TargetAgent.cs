@@ -28,10 +28,10 @@ public class TargetAgent : Agent
     // 状態取得時に呼ばれる
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(roller_obj.transform.position.x);
-        sensor.AddObservation(roller_obj.transform.position.z);
-        sensor.AddObservation(this.transform.position.x); 
-        sensor.AddObservation(this.transform.position.z);
+        sensor.AddObservation(roller_obj.transform.localPosition.x);
+        sensor.AddObservation(roller_obj.transform.localPosition.z);
+        sensor.AddObservation(this.transform.localPosition.x); 
+        sensor.AddObservation(this.transform.localPosition.z);
         sensor.AddObservation(rBody.velocity.x);
         sensor.AddObservation(rBody.velocity.z); 
     }
@@ -50,10 +50,6 @@ public class TargetAgent : Agent
         AddReward(reward);
     }
 
-    public void end_episode() {
-        EndEpisode();
-    }
-
     // ヒューリスティックモードの行動決定時に呼ばれる
     public override void Heuristic(in ActionBuffers actionsOut)
     {
@@ -62,4 +58,17 @@ public class TargetAgent : Agent
         continuousActionsOut[1] = Input.GetAxis("Vertical");
     }
 
+   　// 壁に激突したら罰を与える
+    void OnCollisionEnter(Collision collision)
+    {
+        // RollerAgentに接触したら終了
+        if (collision.gameObject.name == "RollerAgent") {
+            AddReward(-1.0f);
+            EndEpisode();
+        }
+        // 壁に激突したら罰を与える
+        else if (collision.gameObject.CompareTag("Wall")) {
+            AddReward(-0.1f);
+        }
+    }
 }
