@@ -9,7 +9,8 @@ using Unity.MLAgents.Policies;
 public class RollerAgent : Agent
 {
     Rigidbody rBody; // RollerAgentのRigidBody
-    public Target target_obj;
+    public TargetAgent target_obj;
+    private float old_distanceToTarget;
 
     // 初期化時に呼ばれる
     public override void Initialize()
@@ -21,18 +22,10 @@ public class RollerAgent : Agent
     // エピソード開始時に呼ばれる
     public override void OnEpisodeBegin()
     {
-        // RollerAgentが床から落下している時
-        if (this.transform.localPosition.y < 0)
-        {
-            // RollerAgentの位置と速度をリセット
-            this.rBody.angularVelocity = Vector3.zero;
-            this.rBody.velocity = Vector3.zero;
-            this.transform.localPosition = new Vector3(0.0f, 0.5f, 0.0f);
-        }
-
-        // Targetの位置・角速度のリセット
-        target_obj.setRandomPosition();
-        target_obj.setRandomOmega();
+        this.rBody.angularVelocity = Vector3.zero;
+        this.rBody.velocity = Vector3.zero;
+        this.transform.localPosition = new Vector3(Random.value * 2.0f + -5.0f, 0.5f, Random.value * 12.0f - 6.0f);
+        this.old_distanceToTarget = Vector3.Distance(this.transform.localPosition, target_obj.transform.position);
     }
 
     // 状態取得時に呼ばれる
@@ -40,8 +33,8 @@ public class RollerAgent : Agent
     {
         sensor.AddObservation(target_obj.transform.position.x); //TargetのX座標
         sensor.AddObservation(target_obj.transform.position.z); //TargetのZ座標
-        sensor.AddObservation(this.transform.localPosition.x); //RollerAgentのX座標
-        sensor.AddObservation(this.transform.localPosition.z); //RollerAgentのZ座標
+        sensor.AddObservation(this.transform.position.x); //RollerAgentのX座標
+        sensor.AddObservation(this.transform.position.z); //RollerAgentのZ座標
         sensor.AddObservation(rBody.velocity.x); // RollerAgentのX速度
         sensor.AddObservation(rBody.velocity.z); // RollerAgentのZ速度
     }
@@ -55,22 +48,24 @@ public class RollerAgent : Agent
         controlSignal.z = actionBuffers.ContinuousActions[1];
         rBody.AddForce(controlSignal * 10);
 
+        float distanceToTarget = Vector3.Distance(this.transform.localPosition, target_obj.transform.position);
+
         // RollerAgentがTargetの位置にたどりついた時
-        float distanceToTarget = Vector3.Distance(
-            this.transform.localPosition, target_obj.transform.position);
         if (distanceToTarget < 1.42f)
         {
             AddReward(1.0f);
+            target_obj.AddReward(-1.0f);
+            target_obj.EndEpisode();
             EndEpisode();
         }
 
-        // RollerAgentが床から落下した時
-        if (this.transform.localPosition.y < 0)
-        {
-            AddReward(-5.0f);
-            EndEpisode();
+        // SubReward
+        if (distanceToTarget >= old_distanceToTarget) {
+            AddReward(-0.01f);
+            target_obj.AddReward(0.01f);
         }
-        AddReward(-0.01f);
+
+        old_distanceToTarget = distanceToTarget;
     }
 
     // ヒューリスティックモードの行動決定時に呼ばれる
