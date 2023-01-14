@@ -43,7 +43,7 @@ public class TargetAgent : Agent
         Vector3 controlSignal = Vector3.zero;
         controlSignal.x = actionBuffers.ContinuousActions[0];
         controlSignal.z = actionBuffers.ContinuousActions[1];
-        rBody.AddForce(controlSignal * 10);
+        rBody.AddForce(controlSignal * 30);
     }
     
     public void add_reward(float reward) {
