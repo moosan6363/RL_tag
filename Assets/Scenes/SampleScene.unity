@@ -6702,7 +6702,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: ce7ac80c7c5644f23824e78a8322c1c8, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 4c64c0f6febbf4b428782325288d6a9b, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: TargetBall
@@ -7254,7 +7254,7 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 42151f85988be40a9948a5b3904078ab, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 31537ddc9e0f34b4bb4b9d776423331a, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: RollerBall
