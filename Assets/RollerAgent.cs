@@ -55,7 +55,7 @@ public class RollerAgent : Agent
         Vector3 controlSignal = Vector3.zero;
         controlSignal.x = actionBuffers.ContinuousActions[0];
         controlSignal.z = actionBuffers.ContinuousActions[1];
-        rBody.AddForce(controlSignal * 30);
+        rBody.AddForce(Vector3.ClampMagnitude(controlSignal, 1.0f) * 15);
 
         float distanceToTarget = Vector3.Distance(this.transform.localPosition, target_obj.transform.localPosition);
 

@@ -52,7 +52,7 @@ public class TargetAgent : Agent
         Vector3 controlSignal = Vector3.zero;
         controlSignal.x = actionBuffers.ContinuousActions[0];
         controlSignal.z = actionBuffers.ContinuousActions[1];
-        rBody.AddForce(controlSignal * 30);
+        rBody.AddForce(Vector3.ClampMagnitude(controlSignal, 1.0f) * 30);
 
         // // 速度が大きいほど報酬を与える
         // AddReward(rBody.velocity.sqrMagnitude * 1e-5f);
