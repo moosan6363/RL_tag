@@ -55,7 +55,7 @@ public class TargetAgent : Agent
         rBody.AddForce(force);
 
         // 出力が大きいほど罰を与える
-        AddReward(-force.magnitude * 2e-5f);
+        AddReward(-force.magnitude * 1e-5f);
 
         summation_magnitude += force.magnitude;
 

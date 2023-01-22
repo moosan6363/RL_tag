@@ -54,7 +54,7 @@ public class RollerAgent : Agent
         Vector3 controlSignal = Vector3.zero;
         controlSignal.x = actionBuffers.ContinuousActions[0];
         controlSignal.z = actionBuffers.ContinuousActions[1];
-        Vector3 force = Vector3.ClampMagnitude(controlSignal, 1.0f) * 15f;
+        Vector3 force = Vector3.ClampMagnitude(controlSignal, 1.0f) * 30f;
         rBody.AddForce(force);
 
         float distanceToTarget = Vector3.Distance(this.transform.localPosition, target_obj.transform.localPosition);
@@ -68,7 +68,7 @@ public class RollerAgent : Agent
         }
 
         // 出力が大きいほど罰を与える
-        AddReward(-force.magnitude * 2e-5f);
+        AddReward(-force.magnitude * 1e-5f);
 
         summation_magnitude += force.magnitude;
 
